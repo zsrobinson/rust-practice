@@ -11,10 +11,20 @@ fn main() {
 
     loop {
         print_board(&board);
+
         user_input(&mut board, 'X');
-        // check_for_win('X');
+        if check_for_win(&board, 'X') {
+            print_board(&board);
+            println!("You won!");
+            break;
+        }
+
         cpu_input(&mut board, 'O');
-        // check_for_win('O');
+        if check_for_win(&board, 'O') {
+            print_board(&board);
+            println!("The computer won!");
+            break;
+        }
     }
 }
 
@@ -90,4 +100,60 @@ fn cpu_input(board: &mut Vec<Vec<char>>, char: char) {
             break;
         }
     }
+}
+
+fn check_for_win(board: &Vec<Vec<char>>, char: char) -> bool {
+    // check for horizontal win conditions
+    for row in 0..board.len() {
+        for col in 0..=(board[row].len() - 4) {
+            if board[row][col] == char
+                && board[row][col + 1] == char
+                && board[row][col + 2] == char
+                && board[row][col + 3] == char
+            {
+                return true;
+            }
+        }
+    }
+
+    // check for vertical win conditions
+    for row in 0..=(board.len() - 4) {
+        for col in 0..board[row].len() {
+            if board[row][col] == char
+                && board[row + 1][col] == char
+                && board[row + 2][col] == char
+                && board[row + 3][col] == char
+            {
+                return true;
+            }
+        }
+    }
+
+    // check for diagonal win conditions that look like \
+    for row in 0..=(board.len() - 4) {
+        for col in 0..=(board[row].len() - 4) {
+            if board[row][col] == char
+                && board[row + 1][col + 1] == char
+                && board[row + 2][col + 2] == char
+                && board[row + 3][col + 3] == char
+            {
+                return true;
+            }
+        }
+    }
+
+    // check for diagonal win conditions that look like /
+    for row in 0..=(board.len() - 4) {
+        for col in 3..board[row].len() {
+            if board[row][col] == char
+                && board[row + 1][col - 1] == char
+                && board[row + 2][col - 2] == char
+                && board[row + 3][col - 3] == char
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
