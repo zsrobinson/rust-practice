@@ -1,3 +1,4 @@
+use rand::Rng;
 use std::io::{self, Write};
 
 fn main() {
@@ -12,7 +13,7 @@ fn main() {
         print_board(&board);
         user_input(&mut board, 'X');
         // check_for_win('X');
-        // cpu_input(board, 'O');
+        cpu_input(&mut board, 'O');
         // check_for_win('O');
     }
 }
@@ -42,13 +43,13 @@ fn user_input(board: &mut Vec<Vec<char>>, char: char) {
 
 fn print_board(board: &Vec<Vec<char>>) {
     // print column labels
-    for num in 1..=(board.len() + 1) {
+    for num in 1..=(board[0].len()) {
         print!("  {num} ")
     }
     println!();
 
     // print top border
-    for _ in 1..=(board.len() + 1) {
+    for _ in 1..=(board[0].len()) {
         print!(" ___")
     }
     println!();
@@ -63,8 +64,20 @@ fn print_board(board: &Vec<Vec<char>>) {
     }
 
     // print bottom border
-    for _ in 1..=(board.len() + 1) {
+    for _ in 1..=(board[0].len()) {
         print!(" ‾‾‾")
     }
     println!();
+}
+
+fn cpu_input(board: &mut Vec<Vec<char>>, char: char) {
+    let cpu_col = rand::thread_rng().gen_range(0..board[0].len());
+
+    // iterate through the board, bottom to top
+    for row in board.iter_mut().rev() {
+        if row[cpu_col] == ' ' {
+            row[cpu_col] = char;
+            break;
+        }
+    }
 }
