@@ -1,7 +1,7 @@
   <img
     alt="ferris in the sea"
     src="https://upload.wikimedia.org/wikipedia/commons/2/20/Rustacean-orig-noshadow.svg"
-    width="8%"
+    width="10%"
     align="right"
   />
 
