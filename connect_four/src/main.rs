@@ -5,6 +5,7 @@ fn main() {
     const COLUMNS: usize = 7;
     const ROWS: usize = 6;
 
+    println!();
     println!("Welcome to Connect Four!");
 
     let mut board = vec![vec![' '; COLUMNS]; ROWS];
@@ -56,12 +57,18 @@ fn user_input(board: &mut Vec<Vec<char>>, char: char) {
     for row in board.iter_mut().rev() {
         if row[user_col - 1] == ' ' {
             row[user_col - 1] = char;
-            break;
+            return;
         }
     }
+
+    // try again if there are no spaces left in the column
+    println!("That column seems to be full.");
+    user_input(board, char);
 }
 
 fn print_board(board: &Vec<Vec<char>>) {
+    println!();
+
     // print column labels
     for num in 1..=(board[0].len()) {
         print!("  {num} ")
@@ -97,9 +104,13 @@ fn cpu_input(board: &mut Vec<Vec<char>>, char: char) {
     for row in board.iter_mut().rev() {
         if row[cpu_col] == ' ' {
             row[cpu_col] = char;
-            break;
+            println!("The computer played in column {}", cpu_col + 1);
+            return;
         }
     }
+
+    // try again if there are no spaces left in the column
+    cpu_input(board, char);
 }
 
 fn check_for_win(board: &Vec<Vec<char>>, char: char) -> bool {
