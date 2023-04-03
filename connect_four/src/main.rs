@@ -29,7 +29,7 @@ fn main() {
     }
 }
 
-fn user_input(board: &mut Vec<Vec<char>>, char: char) {
+fn user_input(board: &mut Vec<Vec<char>>, player: char) {
     print!("Which column would you like to play in? ");
     _ = io::stdout().flush();
 
@@ -42,28 +42,28 @@ fn user_input(board: &mut Vec<Vec<char>>, char: char) {
         Ok(num) => num,
         Err(_) => {
             println!("Please input a number in the correct range.");
-            user_input(board, char);
+            user_input(board, player);
             return;
         }
     };
 
     if user_col < 1 || user_col > board[0].len() {
         println!("Please input a number in the correct range.");
-        user_input(board, char);
+        user_input(board, player);
         return;
     }
 
     // iterate through the board, bottom to top
     for row in board.iter_mut().rev() {
         if row[user_col - 1] == ' ' {
-            row[user_col - 1] = char;
+            row[user_col - 1] = player;
             return;
         }
     }
 
     // try again if there are no spaces left in the column
     println!("That column seems to be full.");
-    user_input(board, char);
+    user_input(board, player);
 }
 
 fn print_board(board: &Vec<Vec<char>>) {
@@ -97,30 +97,30 @@ fn print_board(board: &Vec<Vec<char>>) {
     println!();
 }
 
-fn cpu_input(board: &mut Vec<Vec<char>>, char: char) {
+fn cpu_input(board: &mut Vec<Vec<char>>, player: char) {
     let cpu_col = rand::thread_rng().gen_range(0..board[0].len());
 
     // iterate through the board, bottom to top
     for row in board.iter_mut().rev() {
         if row[cpu_col] == ' ' {
-            row[cpu_col] = char;
+            row[cpu_col] = player;
             println!("The computer played in column {}", cpu_col + 1);
             return;
         }
     }
 
     // try again if there are no spaces left in the column
-    cpu_input(board, char);
+    cpu_input(board, player);
 }
 
-fn check_for_win(board: &Vec<Vec<char>>, char: char) -> bool {
+fn check_for_win(board: &Vec<Vec<char>>, player: char) -> bool {
     // check for horizontal win conditions
     for row in 0..board.len() {
         for col in 0..=(board[row].len() - 4) {
-            if board[row][col] == char
-                && board[row][col + 1] == char
-                && board[row][col + 2] == char
-                && board[row][col + 3] == char
+            if board[row][col] == player
+                && board[row][col + 1] == player
+                && board[row][col + 2] == player
+                && board[row][col + 3] == player
             {
                 return true;
             }
@@ -130,10 +130,10 @@ fn check_for_win(board: &Vec<Vec<char>>, char: char) -> bool {
     // check for vertical win conditions
     for row in 0..=(board.len() - 4) {
         for col in 0..board[row].len() {
-            if board[row][col] == char
-                && board[row + 1][col] == char
-                && board[row + 2][col] == char
-                && board[row + 3][col] == char
+            if board[row][col] == player
+                && board[row + 1][col] == player
+                && board[row + 2][col] == player
+                && board[row + 3][col] == player
             {
                 return true;
             }
@@ -143,10 +143,10 @@ fn check_for_win(board: &Vec<Vec<char>>, char: char) -> bool {
     // check for diagonal win conditions that look like \
     for row in 0..=(board.len() - 4) {
         for col in 0..=(board[row].len() - 4) {
-            if board[row][col] == char
-                && board[row + 1][col + 1] == char
-                && board[row + 2][col + 2] == char
-                && board[row + 3][col + 3] == char
+            if board[row][col] == player
+                && board[row + 1][col + 1] == player
+                && board[row + 2][col + 2] == player
+                && board[row + 3][col + 3] == player
             {
                 return true;
             }
@@ -156,10 +156,10 @@ fn check_for_win(board: &Vec<Vec<char>>, char: char) -> bool {
     // check for diagonal win conditions that look like /
     for row in 0..=(board.len() - 4) {
         for col in 3..board[row].len() {
-            if board[row][col] == char
-                && board[row + 1][col - 1] == char
-                && board[row + 2][col - 2] == char
-                && board[row + 3][col - 3] == char
+            if board[row][col] == player
+                && board[row + 1][col - 1] == player
+                && board[row + 2][col - 2] == player
+                && board[row + 3][col - 3] == player
             {
                 return true;
             }
