@@ -27,10 +27,20 @@ fn user_input(board: &mut Vec<Vec<char>>, char: char) {
         .read_line(&mut user_col)
         .expect("Failed to read line");
 
-    let user_col: usize = user_col
-        .trim()
-        .parse()
-        .expect("Failed to convert input to number");
+    let user_col: usize = match user_col.trim().parse() {
+        Ok(num) => num,
+        Err(_) => {
+            println!("Please input a number in the correct range.");
+            user_input(board, char);
+            return;
+        }
+    };
+
+    if user_col < 1 || user_col > board[0].len() {
+        println!("Please input a number in the correct range.");
+        user_input(board, char);
+        return;
+    }
 
     // iterate through the board, bottom to top
     for row in board.iter_mut().rev() {
