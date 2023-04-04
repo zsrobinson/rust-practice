@@ -8,23 +8,57 @@ fn main() {
     println!();
     println!("Welcome to Connect Four!");
 
+    let gamemode = prompt_for_gamemode();
+
     let mut board = vec![vec![' '; COLUMNS]; ROWS];
 
-    loop {
-        print_board(&board);
+    if gamemode == 1 {
+        println!();
+        println!("Player 1 will be X and Player 2 will be O.");
+        println!("Player 1 will go first.");
 
-        user_input(&mut board, 'X');
-        if check_for_win(&board, 'X') {
+        loop {
             print_board(&board);
-            println!("You won!");
-            break;
+
+            print!("Player 1, ");
+            user_input(&mut board, 'X');
+            if check_for_win(&board, 'X') {
+                print_board(&board);
+                println!("Player 1 won!");
+                break;
+            }
+
+            print_board(&board);
+
+            print!("Player 2, ");
+            user_input(&mut board, 'O');
+            if check_for_win(&board, 'O') {
+                print_board(&board);
+                println!("Player 2 won!");
+                break;
+            }
         }
+    } else {
+        println!();
+        println!("You will be X and the computer will be O.");
+        println!("You will go first.");
 
-        cpu_input(&mut board, 'O');
-        if check_for_win(&board, 'O') {
+        loop {
             print_board(&board);
-            println!("The computer won!");
-            break;
+
+            user_input(&mut board, 'X');
+            if check_for_win(&board, 'X') {
+                print_board(&board);
+                println!("You won!");
+                break;
+            }
+
+            cpu_input(&mut board, 'O');
+            if check_for_win(&board, 'O') {
+                print_board(&board);
+                println!("The computer won!");
+                break;
+            }
         }
     }
 }
@@ -167,4 +201,33 @@ fn check_for_win(board: &Vec<Vec<char>>, player: char) -> bool {
     }
 
     return false;
+}
+
+fn prompt_for_gamemode() -> u8 {
+    println!();
+    println!("  1. Player vs. Player");
+    println!("  2. Player vs. Computer");
+    println!();
+    print!("What gamemode would you like to play? ");
+    _ = io::stdout().flush();
+
+    let mut gamemode = String::new();
+    io::stdin()
+        .read_line(&mut gamemode)
+        .expect("Failed to read line");
+
+    let gamemode: u8 = match gamemode.trim().parse() {
+        Ok(num) => num,
+        Err(_) => {
+            println!("Please input a number in the correct range.");
+            return prompt_for_gamemode();
+        }
+    };
+
+    if gamemode < 1 || gamemode > 2 {
+        println!("Please input a number in the correct range.");
+        return prompt_for_gamemode();
+    }
+
+    return gamemode;
 }
